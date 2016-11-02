@@ -1,0 +1,12 @@
+{
+  "name": "etdsolutions/choices",
+  "description": "Shim repository for Choices.js",
+  "homepage": "https://github.com/jshjohnson/Choices",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Josh Johnson",
+      "email": "josh@joshuajohnson.co.uk"
+    }
+  ]
+}
