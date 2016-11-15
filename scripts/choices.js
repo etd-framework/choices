@@ -1,4 +1,4 @@
-/*! choices.js v2.4.0 | (c) 2016 Josh Johnson | https://github.com/jshjohnson/Choices#readme */ 
+/*! choices.js v2.4.1 | (c) 2016 Josh Johnson | https://github.com/jshjohnson/Choices#readme */ 
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -138,6 +138,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      noResultsText: 'No results found',
 	      noChoicesText: 'No choices to choose from',
 	      itemSelectText: 'Press to select',
+	      addItemText: function addItemText(value) {
+	        return 'Press Enter to add <b>"' + value + '"</b>';
+	      },
+	      maxItemText: function maxItemText(maxItemCount) {
+	        return 'Only ' + maxItemCount + ' values can be added.';
+	      },
+	      uniqueItemText: 'Only unique values can be added.',
 	      classNames: {
 	        containerOuter: 'choices',
 	        containerInner: 'choices__inner',
@@ -288,7 +295,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // Run callback if it is a function
 	      if (callback) {
 	        if ((0, _utils.isType)('Function', callback)) {
-	          callback();
+	          callback.call(this);
 	        } else {
 	          console.error('callbackOnInit: Callback is not a function');
 	        }
@@ -549,9 +556,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if ((0, _utils.isType)('Function', callback)) {
 	          var group = groupId >= 0 ? this.store.getGroupById(groupId) : null;
 	          if (group && group.value) {
-	            callback(id, item.value, group.value);
+	            callback.call(this, id, item.value, group.value);
 	          } else {
-	            callback(id, item.value);
+	            callback.call(this, id, item.value);
 	          }
 	        } else {
 	          console.error('callbackOnHighlightItem: Callback is not a function');
@@ -583,9 +590,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if ((0, _utils.isType)('Function', callback)) {
 	          var group = groupId >= 0 ? this.store.getGroupById(groupId) : null;
 	          if (group && group.value) {
-	            callback(id, item.value, group.value);
+	            callback.call(this, id, item.value, group.value);
 	          } else {
-	            callback(id, item.value);
+	            callback.call(this, id, item.value);
 	          }
 	        } else {
 	          console.error('callbackOnUnhighlightItem: Callback is not a function');
@@ -1076,7 +1083,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // Run callback if it is a function
 	      if (callback) {
 	        if ((0, _utils.isType)('Function', callback)) {
-	          callback(value);
+	          callback.call(this, value);
 	        } else {
 	          console.error('callbackOnChange: Callback is not a function');
 	        }
@@ -1243,14 +1250,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: '_canAddItem',
 	    value: function _canAddItem(activeItems, value) {
 	      var canAddItem = true;
-	      var notice = 'Press Enter to add <b>"' + value + '"</b>';
+	      var notice = (0, _utils.isType)('Function', this.config.addItemText) ? this.config.addItemText(value) : this.config.addItemText;
 
 	      if (this.passedElement.type === 'select-multiple' || this.passedElement.type === 'text') {
 	        if (this.config.maxItemCount > 0 && this.config.maxItemCount <= this.itemList.children.length) {
 	          // If there is a max entry limit and we have reached that limit
 	          // don't update
 	          canAddItem = false;
-	          notice = 'Only ' + this.config.maxItemCount + ' values can be added.';
+	          notice = (0, _utils.isType)('Function', this.config.maxItemText) ? this.config.maxItemText(this.config.maxItemCount) : this.config.maxItemText;
 	        }
 	      }
 
@@ -1270,7 +1277,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // in the array
 	        if (this.config.duplicateItems === false && !isUnique) {
 	          canAddItem = false;
-	          notice = 'Only unique values can be added.';
+	          notice = (0, _utils.isType)('Function', this.config.uniqueItemText) ? this.config.uniqueItemText(value) : this.config.uniqueItemText;
 	        }
 	      }
 
@@ -1408,7 +1415,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          // Run callback if it is a function
 	          if (callback) {
 	            if ((0, _utils.isType)('Function', callback)) {
-	              callback(value);
+	              callback.call(this, value);
 	            } else {
 	              console.error('callbackOnSearch: Callback is not a function');
 	            }
@@ -2168,9 +2175,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var group = groupId >= 0 ? this.store.getGroupById(groupId) : null;
 	        if ((0, _utils.isType)('Function', callback)) {
 	          if (group && group.value) {
-	            callback(id, passedValue, group.value);
+	            callback.call(this, id, passedValue, group.value);
 	          } else {
-	            callback(id, passedValue);
+	            callback.call(this, id, passedValue);
 	          }
 	        } else {
 	          console.error('callbackOnAddItem: Callback is not a function');
@@ -2209,9 +2216,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if ((0, _utils.isType)('Function', callback)) {
 	          var group = groupId >= 0 ? this.store.getGroupById(groupId) : null;
 	          if (group && group.value) {
-	            callback(id, value, group.value);
+	            callback.call(this, id, value, group.value);
 	          } else {
-	            callback(id, value);
+	            callback.call(this, id, value);
 	          }
 	        } else {
 	          console.error('callbackOnRemoveItem: Callback is not a function');
@@ -2385,7 +2392,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var callbackTemplate = this.config.callbackOnCreateTemplates;
 	      var userTemplates = {};
 	      if (callbackTemplate && (0, _utils.isType)('Function', callbackTemplate)) {
-	        userTemplates = callbackTemplate(this, _utils.strToEl);
+	        userTemplates = callbackTemplate.call(this, _utils.strToEl);
 	      }
 	      this.config.templates = (0, _utils.extend)(templates, userTemplates);
 	    }
